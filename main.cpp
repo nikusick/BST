@@ -1,5 +1,5 @@
 #include <iostream>
-#include "BinarySearchTree.h"
+#include "set.h"
 
 int main() {
     /*BinarySearchTree<int, std::string> BST;
@@ -40,5 +40,10 @@ int main() {
     std::cout << map[16] << std::endl;
     Map<int, bool> map1;
     std::cout << map1[16] << std::endl;
+
+    Set<int> set;
+    std::cout << set.contains(20) << std::endl;
+    set.insert(20);
+    std::cout << set.contains(20) << std::endl;
     return 0;
 }
