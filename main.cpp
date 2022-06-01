@@ -2,7 +2,7 @@
 #include "BinarySearchTree.h"
 
 int main() {
-    BinarySearchTree<int, std::string> BST;
+    /*BinarySearchTree<int, std::string> BST;
 
     BST.insert(22, "huy");
     BST.insert(21, "21c");
@@ -13,7 +13,7 @@ int main() {
     BST.insert(21, "hell2");
     BST.insert(19, "hell19");
     BST.insert(20, "hell20");
-    BST.erase(21);
+    BST.erase(18);
 
     std::cout << BST.size();
 
@@ -27,7 +27,18 @@ int main() {
     auto mit = BST.max(20);
 
     std::cout << it->second << std::endl;
-    std::cout << mit->second;
+    std::cout << mit->second;*/
 
+    Map<int, std::string> map;
+    map.insert(15, "hello");
+    map.insert(16, "world");
+    std::cout << map[15] << std::endl;
+    std::cout << map[6] << std::endl;
+    std::cout << map.size() << std::endl;
+    map.erase(15);
+    std::cout << map[15] << std::endl;
+    std::cout << map[16] << std::endl;
+    Map<int, bool> map1;
+    std::cout << map1[16] << std::endl;
     return 0;
 }

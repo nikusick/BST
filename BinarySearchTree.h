@@ -456,7 +456,7 @@ private:
     Node* _root = nullptr; //!< корневой узел дерева
 };
 
-/*template <typename Key, typename Value>
+template <typename Key, typename Value>
 class Map
 {
     BinarySearchTree<Key, Value> _tree;
@@ -472,41 +472,77 @@ public:
         Map newMap = Map(other);
         std::swap(newMap, *this);
         delete newMap;
+        return *this;
     }
 
     explicit Map(Map&& other) noexcept {
-
+        std::swap(_tree, other._tree);
     }
-    Map& operator=(Map&& other) noexcept;
+    Map& operator=(Map&& other) noexcept {
+        std::swap(_tree, other._tree);
+        return *this;
+    }
 
     ~Map() = default;
 
     // вставить элемент с ключем key и значением value
     // если узел с ключем key уже представлен, то заменить его значение на value
-    void insert(const Key& key, const Value& value);
+    void insert(const Key& key, const Value& value) {
+        if (find(key) != end()) {
+            erase(key);
+        }
+        else
+            _tree.insert(key, value);
+    }
 
     // удалить элемент с ключем key
-    void erase(const Key& key);
+    void erase(const Key& key) {
+        _tree.erase(key);
+    }
 
     // найти элемент, равный ключу key
-    ConstMapIterator find(const Key& key) const;
-    MapIterator find(const Key& key);
+    ConstMapIterator find(const Key& key) const {
+        return ConstMapIterator(_tree.find(key));
+    }
+    MapIterator find(const Key& key) {
+        return MapIterator (_tree.find(key));
+    }
 
     // доступ к элементу по ключу
     // если в момент обращения элемента не существует, создать его,
     // ключ равен key, value равно дефолтному значению для типа Value
-    const Value& operator[](const Key& key) const;
-    Value& operator[](const Key& key);
+    const Value& operator[](const Key& key) const {
+        if (find(key) == end()) {
+            insert(key, std::iterator_traits<Value>::value_type);
+        }
+        return _tree.find(key)->second;
+    }
+    Value& operator[](const Key& key) {
+        if (find(key) == end()) {
+            _tree.insert(key, Value());
+        }
+        return _tree.find(key)->second;
+    }
 
-    MapIterator begin();
-    MapIterator end();
+    MapIterator begin() {
+        return MapIterator(_tree.begin());
+    }
+    MapIterator end() {
+        return MapIterator(_tree.end());
+    }
 
-    ConstMapIterator cbegin() const;
-    ConstMapIterator cend() const;
+    ConstMapIterator cbegin() const {
+        return ConstMapIterator(_tree.cbegin());
+    }
+    ConstMapIterator cend() const {
+        return ConstMapIterator(_tree.cend());
+    }
 
-    size_t size() const;
+    size_t size() const {
+        return _tree.size();
+    }
 };
-
+/*
 template <typename Value>
 class Set
 {
