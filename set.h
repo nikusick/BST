@@ -13,12 +13,6 @@ public:
     using ConstSetIterator = typename Map<Value, Value>::ConstMapIterator;
 
     Set() = default;
-
-    explicit Set(const Set& other);
-    Set& operator=(const Set& other);
-
-    explicit Set(Set&& other) noexcept;
-    Set& operator=(Set&& other) noexcept;
     ~Set() = default;
 
     void insert(const Value& value);
@@ -29,35 +23,6 @@ public:
 
     bool contains(const Value& value) const;
 };
-
-template<typename Value>
-Set<Value>::Set(const Set &other): _map(other._map) {
-}
-
-template<typename Value>
-Set<Value>& Set<Value>::operator=(const Set &other) {
-    Set newSet = Set(other);
-    std::swap(newSet, *this);
-    delete newSet;
-    return *this;
-}
-
-template<typename Value>
-Set<Value>::Set(Set &&other) noexcept {
-    if (this != other) {
-        std::swap(_map, other._map);
-        delete other;
-    }
-}
-
-template<typename Value>
-Set<Value>& Set<Value>::operator=(Set &&other) noexcept {
-    if (this != other) {
-        std::swap(_map, other._map);
-        delete other;
-        return *this;
-    }
-}
 
 template<typename Value>
 void Set<Value>::insert(const Value &value) {

@@ -14,10 +14,10 @@ class BinarySearchTree
              Node* left = nullptr,
              Node* right = nullptr);
 
-        std::pair<Key, Value> _keyValuePair;
-        Node* _parent = nullptr;
-        Node* _left = nullptr;
-        Node* _right = nullptr;
+        std::pair<Key, Value> keyValuePair;
+        Node* parent = nullptr;
+        Node* left = nullptr;
+        Node* right = nullptr;
     };
 
     void remove(const Key &key, Node* node);
@@ -111,12 +111,12 @@ BinarySearchTree<Key, Value>::ConstIterator::ConstIterator(const BinarySearchTre
 
 template<typename Key, typename Value>
 const std::pair<Key, Value> &BinarySearchTree<Key, Value>::ConstIterator::operator*() const {
-    return _node->_keyValuePair;
+    return _node->keyValuePair;
 }
 
 template<typename Key, typename Value>
 const std::pair<Key, Value> *BinarySearchTree<Key, Value>::ConstIterator::operator->() const {
-    return &_node->_keyValuePair;
+    return &_node->keyValuePair;
 }
 
 template<typename Key, typename Value>
@@ -124,16 +124,16 @@ typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value
     if (_node == nullptr) {
         return *this;
     }
-    if (_node->_right != nullptr) {
-        _node = _node->_right;
-        while (_node->_left != nullptr) {
-            _node = _node->_left;
+    if (_node->right != nullptr) {
+        _node = _node->right;
+        while (_node->left != nullptr) {
+            _node = _node->left;
         }
     } else {
-        while (_node->_parent != nullptr && _node->_parent->_right == _node) {
-            _node = _node->_parent;
+        while (_node->parent != nullptr && _node->parent->right == _node) {
+            _node = _node->parent;
         }
-        _node = _node->_parent;
+        _node = _node->parent;
     }
     return *this;
 }
@@ -150,16 +150,16 @@ typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value
     if (_node == nullptr) {
         return *this;
     }
-    if (_node->_left != nullptr) {
-        _node = _node->_left;
-        while (_node->_right != nullptr) {
-            _node = _node->_right;
+    if (_node->left != nullptr) {
+        _node = _node->left;
+        while (_node->right != nullptr) {
+            _node = _node->right;
         }
     } else {
-        while (_node->_parent != nullptr && _node->_parent->_left == _node) {
-            _node = _node->_parent;
+        while (_node->parent != nullptr && _node->parent->left == _node) {
+            _node = _node->parent;
         }
-        _node = _node->_parent;
+        _node = _node->parent;
     }
     return *this;
 }
@@ -187,22 +187,22 @@ BinarySearchTree<Key, Value>::Iterator::Iterator(BinarySearchTree::Node *node): 
 
 template<typename Key, typename Value>
 std::pair<Key, Value> &BinarySearchTree<Key, Value>::Iterator::operator*() {
-    return _node->_keyValuePair;
+    return _node->keyValuePair;
 }
 
 template<typename Key, typename Value>
 const std::pair<Key, Value> &BinarySearchTree<Key, Value>::Iterator::operator*() const {
-    return _node->_keyValuePair;
+    return _node->keyValuePair;
 }
 
 template<typename Key, typename Value>
 std::pair<Key, Value> *BinarySearchTree<Key, Value>::Iterator::operator->() {
-    return &_node->_keyValuePair;
+    return &_node->keyValuePair;
 }
 
 template<typename Key, typename Value>
 const std::pair<Key, Value> *BinarySearchTree<Key, Value>::Iterator::operator->() const {
-    return &_node->_keyValuePair;
+    return &_node->keyValuePair;
 }
 
 template<typename Key, typename Value>
@@ -210,16 +210,16 @@ typename BinarySearchTree<Key, Value>::Iterator BinarySearchTree<Key, Value>::It
     if (_node == nullptr) {
         return *this;
     }
-    if (_node->_right != nullptr) {
-        _node = _node->_right;
-        while (_node->_left != nullptr) {
-            _node = _node->_left;
+    if (_node->right != nullptr) {
+        _node = _node->right;
+        while (_node->left != nullptr) {
+            _node = _node->left;
         }
     } else {
-        while (_node->_parent != nullptr && _node->_parent->_right == _node) {
-            _node = _node->_parent;
+        while (_node->parent != nullptr && _node->parent->right == _node) {
+            _node = _node->parent;
         }
-        _node = _node->_parent;
+        _node = _node->parent;
     }
     return *this;
 }
@@ -236,16 +236,16 @@ typename BinarySearchTree<Key, Value>::Iterator BinarySearchTree<Key, Value>::It
     if (_node == nullptr) {
         return *this;
     }
-    if (_node->_left != nullptr) {
-        _node = _node->_left;
-        while (_node->_right != nullptr) {
-            _node = _node->_right;
+    if (_node->left != nullptr) {
+        _node = _node->left;
+        while (_node->right != nullptr) {
+            _node = _node->right;
         }
     } else {
-        while (_node->_parent != nullptr && _node->_parent->_left == _node) {
-            _node = _node->_parent;
+        while (_node->parent != nullptr && _node->parent->left == _node) {
+            _node = _node->parent;
         }
-        _node = _node->_parent;
+        _node = _node->parent;
     }
     return *this;
 }
@@ -272,66 +272,66 @@ void BinarySearchTree<Key, Value>::remove(const Key &key, BinarySearchTree::Node
     if (node == nullptr)  {
         return;
     }
-    if (key > node->_keyValuePair.first) {
-        remove(key, node->_right);
+    if (key > node->keyValuePair.first) {
+        remove(key, node->right);
     }
-    else if (key < node->_keyValuePair.first) {
-        remove(key, node->_left);
+    else if (key < node->keyValuePair.first) {
+        remove(key, node->left);
     }
     else {
-        if (node->_left == nullptr && node->_right == nullptr) {
-            if (node->_parent->_left == node) {
-                node->_parent->_left = nullptr;
+        if (node->left == nullptr && node->right == nullptr) {
+            if (node->parent->left == node) {
+                node->parent->left = nullptr;
             }
             else {
-                node->_parent->_right = nullptr;
+                node->parent->right = nullptr;
             }
             delete node;
             _size--;
         }
-        else if (node->_left == nullptr) {
-            Node* right = node->_right;
-            node->_keyValuePair = right->_keyValuePair;
-            node->_left = right->_left;
-            node->_right = right->_right;
-            if (node->_right != nullptr) {
-                node->_right->_parent = node;
+        else if (node->left == nullptr) {
+            Node* right = node->right;
+            node->keyValuePair = right->keyValuePair;
+            node->left = right->left;
+            node->right = right->right;
+            if (node->right != nullptr) {
+                node->right->parent = node;
             }
-            if (node->_left != nullptr) {
-                node->_left->_parent = node;
+            if (node->left != nullptr) {
+                node->left->parent = node;
             }
             delete right;
             _size--;
         }
-        else if (node->_right == nullptr){
-            Node* left = node->_left;
-            node->_keyValuePair = left->_keyValuePair;
-            node->_left = left->_left;
-            node->_right = left->_right;
-            if (node->_right != nullptr) {
-                node->_right->_parent = node;
+        else if (node->right == nullptr){
+            Node* left = node->left;
+            node->keyValuePair = left->keyValuePair;
+            node->left = left->left;
+            node->right = left->right;
+            if (node->right != nullptr) {
+                node->right->parent = node;
             }
-            if (node->_left != nullptr) {
-                node->_left->_parent = node;
+            if (node->left != nullptr) {
+                node->left->parent = node;
             }
             delete left;
             _size--;
         }
         else {
-            if (node->_right->_left == nullptr) {
-                node->_keyValuePair = node->_right->_keyValuePair;
-                Node* newNode = node->_right->_right;
-                delete node->_right;
-                node->_right = newNode;
+            if (node->right->left == nullptr) {
+                node->keyValuePair = node->right->keyValuePair;
+                Node* newNode = node->right->right;
+                delete node->right;
+                node->right = newNode;
                 _size--;
             }
             else {
-                Node* minNode(node->_right);
-                while (minNode->_left != nullptr) {
-                    minNode = minNode->_left;
+                Node* minNode(node->right);
+                while (minNode->left != nullptr) {
+                    minNode = minNode->left;
                 }
-                node->_keyValuePair = minNode->_keyValuePair;
-                remove(minNode->_keyValuePair.first, minNode);
+                node->keyValuePair = minNode->keyValuePair;
+                remove(minNode->keyValuePair.first, minNode);
             }
         }
     }
@@ -344,13 +344,13 @@ BinarySearchTree<Key, Value>::BinarySearchTree(const BinarySearchTree &other) {
         children.push(other._root);
         while (!children.empty()) {
             Node* curNode = children.front();
-            insert(curNode->_keyValuePair);
+            insert(curNode->keyValuePair);
             _size++;
             if (curNode->left != nullptr) {
-                children.push(curNode->_left);
+                children.push(curNode->left);
             }
             if (curNode->right != nullptr) {
-                children.push(curNode->_right);
+                children.push(curNode->right);
             }
             children.pop();
         }
@@ -391,11 +391,11 @@ BinarySearchTree<Key, Value>::~BinarySearchTree() {
         children.push(_root);
         while (!children.empty()) {
             Node* curNode = children.front();
-            if (curNode->_left != nullptr) {
-                children.push(curNode->_left);
+            if (curNode->left != nullptr) {
+                children.push(curNode->left);
             }
-            if (curNode->_right != nullptr) {
-                children.push(curNode->_right);
+            if (curNode->right != nullptr) {
+                children.push(curNode->right);
             }
             delete curNode;
             children.pop();
@@ -408,22 +408,22 @@ template<typename Key, typename Value>
 void BinarySearchTree<Key, Value>::insert(const Key &key, const Value &value) {
     if (_root != nullptr) {
         Node* curNode = _root;
-        Key curKey = curNode->_keyValuePair.first;
-        while ((curKey >= key && curNode->_left != nullptr)
-               || (curKey < key && curNode->_right != nullptr)) {
+        Key curKey = curNode->keyValuePair.first;
+        while ((curKey >= key && curNode->left != nullptr)
+               || (curKey < key && curNode->right != nullptr)) {
             if (curKey >= key) {
-                curNode = curNode->_left;
+                curNode = curNode->left;
             }
             else {
-                curNode = curNode->_right;
+                curNode = curNode->right;
             }
-            curKey = curNode->_keyValuePair.first;
+            curKey = curNode->keyValuePair.first;
         }
         if (curKey >= key) {
-            curNode->_left = new Node(key, value, curNode);
+            curNode->left = new Node(key, value, curNode);
         }
         else {
-            curNode->_right = new Node(key, value, curNode);
+            curNode->right = new Node(key, value, curNode);
         }
     }
     else {
@@ -443,11 +443,11 @@ template<typename Key, typename Value>
 typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value>::find(const Key &key) const {
     Node* curNode = _root;
     while(curNode != nullptr) {
-        if (curNode->_keyValuePair.first > key) {
-            curNode = curNode->_left;
+        if (curNode->keyValuePair.first > key) {
+            curNode = curNode->left;
         }
-        else if (curNode->_keyValuePair.first < key){
-            curNode = curNode->_right;
+        else if (curNode->keyValuePair.first < key){
+            curNode = curNode->right;
         }
         else {
             break;
@@ -460,17 +460,17 @@ template<typename Key, typename Value>
 typename BinarySearchTree<Key, Value>::Iterator BinarySearchTree<Key, Value>::find(const Key &key) {
     Node* curNode = _root;
     while (curNode != nullptr) {
-        if (curNode->_keyValuePair.first > key) {
-            if (curNode->_left == nullptr) {
+        if (curNode->keyValuePair.first > key) {
+            if (curNode->left == nullptr) {
                 return Iterator(nullptr);
             }
-            curNode = curNode->_left;
+            curNode = curNode->left;
         }
-        else if (curNode->_keyValuePair.first < key){
-            if (curNode->_right == nullptr) {
+        else if (curNode->keyValuePair.first < key){
+            if (curNode->right == nullptr) {
                 return Iterator(nullptr);
             }
-            curNode = curNode->_right;
+            curNode = curNode->right;
         }
         else {
             break;
@@ -540,8 +540,8 @@ typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value
 template<typename Key, typename Value>
 typename BinarySearchTree<Key, Value>::Iterator BinarySearchTree<Key, Value>::begin() {
     Node* curNode = _root;
-    while  (curNode->_left != nullptr) {
-        curNode = curNode->_left;
+    while  (curNode->left != nullptr) {
+        curNode = curNode->left;
     }
     return BinarySearchTree::Iterator(curNode);
 }
@@ -554,8 +554,8 @@ typename BinarySearchTree<Key, Value>::Iterator BinarySearchTree<Key, Value>::en
 template<typename Key, typename Value>
 typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value>::cbegin() const {
     Node* curNode = _root;
-    while  (curNode->_left != nullptr) {
-        curNode = curNode->_left;
+    while  (curNode->left != nullptr) {
+        curNode = curNode->left;
     }
     return BinarySearchTree::ConstIterator(curNode);
 }
@@ -573,6 +573,6 @@ std::size_t BinarySearchTree<Key, Value>::size() const {
 template<typename Key, typename Value>
 BinarySearchTree<Key, Value>::Node::Node(Key key, Value value, BinarySearchTree::Node *parent,
                                          BinarySearchTree::Node *left, BinarySearchTree::Node *right):
-                                         _keyValuePair(std::make_pair(key, value)),
-                                         _parent(parent), _left(left), _right(right) {
+                                         keyValuePair(std::make_pair(key, value)),
+                                         parent(parent), left(left), right(right) {
     }

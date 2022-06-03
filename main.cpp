@@ -2,7 +2,7 @@
 #include "set.h"
 
 int main() {
-    /*BinarySearchTree<int, std::string> BST;
+    BinarySearchTree<int, std::string> BST;
 
     BST.insert(22, "huy");
     BST.insert(21, "21c");
@@ -27,7 +27,7 @@ int main() {
     auto mit = BST.max(20);
 
     std::cout << it->second << std::endl;
-    std::cout << mit->second;*/
+    std::cout << mit->second;
 
     Map<int, std::string> map;
     map.insert(15, "hello");

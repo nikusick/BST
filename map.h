@@ -11,13 +11,6 @@ public:
     using ConstMapIterator = typename BinarySearchTree<Key, Value>::ConstIterator;
 
     Map() = default;
-
-    explicit Map(const Map& other);
-    Map& operator=(const Map& other);
-
-    explicit Map(Map&& other) noexcept;
-    Map& operator=(Map&& other) noexcept;
-
     ~Map() = default;
 
     void insert(const Key& key, const Value& value);
@@ -37,35 +30,6 @@ public:
 
     std::size_t size() const;
 };
-
-template<typename Key, typename Value>
-Map<Key, Value>::Map(const Map &other): _tree(other._tree){
-}
-
-template<typename Key, typename Value>
-Map<Key, Value>& Map<Key, Value>::operator=(const Map &other) {
-    Map newMap = Map(other);
-    std::swap(newMap, *this);
-    delete newMap;
-    return *this;
-}
-
-template<typename Key, typename Value>
-Map<Key, Value>::Map(Map &&other) noexcept {
-    if (this != other) {
-        std::swap(_tree, other._tree);
-        delete other;
-    }
-}
-
-template<typename Key, typename Value>
-Map<Key, Value>& Map<Key, Value>::operator=(Map &&other) noexcept {
-    if (this != other) {
-        std::swap(_tree, other._tree);
-        delete other;
-        return *this;
-    }
-}
 
 template<typename Key, typename Value>
 void Map<Key, Value>::insert(const Key &key, const Value &value) {
