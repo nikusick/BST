@@ -4,15 +4,13 @@
 int main() {
     BinarySearchTree<int, std::string> BST;
 
-    BST.insert(22, "huy");
-    BST.insert(21, "21c");
-    BST.insert(21, "21");
-    BST.insert(16, "hell16");
-    BST.insert(18, "hell18");
-    BST.insert(17, "hell17");
-    BST.insert(21, "hell2");
-    BST.insert(19, "hell19");
-    BST.insert(20, "hell20");
+    BST.insert(16, "hello16");
+    BST.insert(18, "hello18");
+    BST.insert(17, "hello17");
+    BST.insert(21, "hello2");
+    BST.insert(19, "hello19");
+    BST.insert(20, "hello20");
+    BST.insert(18, "hello181");
     BST.erase(18);
 
     std::cout << BST.size();
