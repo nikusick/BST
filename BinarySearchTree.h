@@ -280,32 +280,24 @@ void BinarySearchTree<Key, Value>::remove(const Key &key, BinarySearchTree::Node
             delete node;
             _size--;
         }
-        else if (node->left == nullptr) {
-            Node* right = node->right;
-            node->keyValuePair = right->keyValuePair;
-            node->left = right->left;
-            node->right = right->right;
+        else if (node->left == nullptr || node->right == nullptr) {
+            Node* nodeToDel;
+            if (node->left == nullptr) {
+                nodeToDel = node->right;
+            }
+            else {
+                nodeToDel = node->left;
+            }
+            node->keyValuePair = nodeToDel->keyValuePair;
+            node->left = nodeToDel->left;
+            node->right = nodeToDel->right;
             if (node->right != nullptr) {
                 node->right->parent = node;
             }
             if (node->left != nullptr) {
                 node->left->parent = node;
             }
-            delete right;
-            _size--;
-        }
-        else if (node->right == nullptr){
-            Node* left = node->left;
-            node->keyValuePair = left->keyValuePair;
-            node->left = left->left;
-            node->right = left->right;
-            if (node->right != nullptr) {
-                node->right->parent = node;
-            }
-            if (node->left != nullptr) {
-                node->left->parent = node;
-            }
-            delete left;
+            delete nodeToDel;
             _size--;
         }
         else {
@@ -399,20 +391,10 @@ void BinarySearchTree<Key, Value>::insert(const Key &key, const Value &value) {
         Key curKey = curNode->keyValuePair.first;
         while ((curKey >= key && curNode->left != nullptr)
                || (curKey < key && curNode->right != nullptr)) {
-            if (curKey >= key) {
-                curNode = curNode->left;
-            }
-            else {
-                curNode = curNode->right;
-            }
+            curNode = curKey >= key ? curNode->left: curNode->right;
             curKey = curNode->keyValuePair.first;
         }
-        if (curKey >= key) {
-            curNode->left = new Node(key, value, curNode);
-        }
-        else {
-            curNode->right = new Node(key, value, curNode);
-        }
+        curKey >= key? curNode->left: curNode->right = new Node(key, value, curNode);
     }
     else {
         _root = new Node(key, value);
@@ -572,5 +554,5 @@ template<typename Key, typename Value>
 BinarySearchTree<Key, Value>::Node::Node(Key key, Value value, BinarySearchTree::Node *parent,
                                          BinarySearchTree::Node *left, BinarySearchTree::Node *right):
                                          keyValuePair(std::make_pair(key, value)),
-                                         parent(parent), left(left), right(right) {
-    }
+                                         parent(parent), left(left), right(right)
+                                         }
