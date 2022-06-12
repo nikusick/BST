@@ -11,21 +11,22 @@ int main() {
     BST.insert(19, "hello19");
     BST.insert(20, "hello20");
     BST.insert(18, "hello181");
-    BST.erase(18);
+    BST.erase(19);
 
-    std::cout << BST.size();
+    std::cout << BST.size() << std::endl;
 
     auto [st, sp] = BST.equalRange(21);
 
     for (; st != sp; ++st) {
         std::cout << st->second << ", ";
     }
+    std::cout << std::endl;
 
-    auto it = BST.min(20);
-    auto mit = BST.max(20);
+    auto it = BST.min(18);
+    auto mit = BST.max(18);
 
     std::cout << it->second << std::endl;
-    std::cout << mit->second;
+    std::cout << mit->second << std:: endl;
 
     Map<int, std::string> map;
     map.insert(15, "hello");
@@ -36,6 +37,7 @@ int main() {
     map.erase(15);
     std::cout << map[15] << std::endl;
     std::cout << map[16] << std::endl;
+
     Map<int, bool> map1;
     std::cout << map1[16] << std::endl;
 

@@ -394,7 +394,7 @@ void BinarySearchTree<Key, Value>::insert(const Key &key, const Value &value) {
             curNode = curKey >= key ? curNode->left: curNode->right;
             curKey = curNode->keyValuePair.first;
         }
-        curKey >= key? curNode->left: curNode->right = new Node(key, value, curNode);
+        (curKey >= key? curNode->left: curNode->right) = new Node(key, value, curNode);
     }
     else {
         _root = new Node(key, value);
@@ -413,15 +413,10 @@ template<typename Key, typename Value>
 typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value>::find(const Key &key) const {
     Node* curNode = _root;
     while(curNode != nullptr) {
-        if (curNode->keyValuePair.first > key) {
-            curNode = curNode->left;
-        }
-        else if (curNode->keyValuePair.first < key){
-            curNode = curNode->right;
-        }
-        else {
+        if (curNode->keyValuePair.first == key) {
             break;
         }
+        curNode = curNode->keyValuePair.first > key? curNode->left: curNode->right;
     }
     return ConstIterator(curNode);
 }
@@ -554,5 +549,6 @@ template<typename Key, typename Value>
 BinarySearchTree<Key, Value>::Node::Node(Key key, Value value, BinarySearchTree::Node *parent,
                                          BinarySearchTree::Node *left, BinarySearchTree::Node *right):
                                          keyValuePair(std::make_pair(key, value)),
-                                         parent(parent), left(left), right(right)
+                                         parent(parent), left(left), right(right) {
+
                                          }
