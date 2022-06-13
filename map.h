@@ -47,11 +47,7 @@ void Map<Key, Value>::erase(const Key &key) {
 
 template<typename Key, typename Value>
 typename Map<Key, Value>::ConstMapIterator Map<Key, Value>::find(const Key &key) const {
-    ConstMapIterator constMapIterator = ConstMapIterator(_tree.find(key));
-    if (constMapIterator == ConstMapIterator(nullptr)) {
-        throw std::invalid_argument("Key not found!");
-    }
-    return constMapIterator;
+    return ConstMapIterator(_tree.find(key));
 }
 
 template<typename Key, typename Value>
@@ -62,7 +58,7 @@ typename Map<Key, Value>::MapIterator Map<Key, Value>::find(const Key &key) {
 template<typename Key, typename Value>
 const Value &Map<Key, Value>::operator[](const Key &key) const {
     if (find(key) == end()) {
-        insert(key, std::iterator_traits<Value>::value_type);
+        throw std::invalid_argument("Key not found!");
     }
     return _tree.find(key)->second;
 }

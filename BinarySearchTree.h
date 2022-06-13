@@ -21,6 +21,7 @@ class BinarySearchTree
     };
 
     void remove(const Key &key, Node* node);
+    void clear();
     static Node* minNode(Node* node);
     static Node* maxNode(Node* node);
 
@@ -113,7 +114,7 @@ BinarySearchTree<Key, Value>::ConstIterator::ConstIterator(const BinarySearchTre
 }
 
 template<typename Key, typename Value>
-const std::pair<Key, Value> &BinarySearchTree<Key, Value>::ConstIterator::operator*() const {
+const std::pair<Key, Value>& BinarySearchTree<Key, Value>::ConstIterator::operator*() const {
     return _node->keyValuePair;
 }
 
@@ -179,26 +180,26 @@ bool BinarySearchTree<Key, Value>::ConstIterator::operator!=(const BinarySearchT
 }
 
 template<typename Key, typename Value>
-BinarySearchTree<Key, Value>::Iterator::Iterator(BinarySearchTree::Node *node): _node(node) {
+BinarySearchTree<Key, Value>::Iterator::Iterator(BinarySearchTree::Node* node): _node(node) {
 }
 
 template<typename Key, typename Value>
-std::pair<Key, Value> &BinarySearchTree<Key, Value>::Iterator::operator*() {
+std::pair<Key, Value>& BinarySearchTree<Key, Value>::Iterator::operator*() {
     return _node->keyValuePair;
 }
 
 template<typename Key, typename Value>
-const std::pair<Key, Value> &BinarySearchTree<Key, Value>::Iterator::operator*() const {
+const std::pair<Key, Value>& BinarySearchTree<Key, Value>::Iterator::operator*() const {
     return _node->keyValuePair;
 }
 
 template<typename Key, typename Value>
-std::pair<Key, Value> *BinarySearchTree<Key, Value>::Iterator::operator->() {
+std::pair<Key, Value>* BinarySearchTree<Key, Value>::Iterator::operator->() {
     return &_node->keyValuePair;
 }
 
 template<typename Key, typename Value>
-const std::pair<Key, Value> *BinarySearchTree<Key, Value>::Iterator::operator->() const {
+const std::pair<Key, Value>* BinarySearchTree<Key, Value>::Iterator::operator->() const {
     return &_node->keyValuePair;
 }
 
@@ -249,17 +250,17 @@ typename BinarySearchTree<Key, Value>::Iterator BinarySearchTree<Key, Value>::It
 }
 
 template<typename Key, typename Value>
-bool BinarySearchTree<Key, Value>::Iterator::operator!=(const BinarySearchTree::Iterator &other) const {
+bool BinarySearchTree<Key, Value>::Iterator::operator!=(const BinarySearchTree::Iterator& other) const {
     return _node != other._node;
 }
 
 template<typename Key, typename Value>
-bool BinarySearchTree<Key, Value>::Iterator::operator==(const BinarySearchTree::Iterator &other) const {
+bool BinarySearchTree<Key, Value>::Iterator::operator==(const BinarySearchTree::Iterator& other) const {
     return _node == other._node;
 }
 
 template<typename Key, typename Value>
-void BinarySearchTree<Key, Value>::remove(const Key &key, BinarySearchTree::Node *node) {
+void BinarySearchTree<Key, Value>::remove(const Key& key, BinarySearchTree::Node* node) {
     if (node == nullptr)  {
         return;
     }
@@ -318,27 +319,16 @@ void BinarySearchTree<Key, Value>::remove(const Key &key, BinarySearchTree::Node
 }
 
 template<typename Key, typename Value>
-BinarySearchTree<Key, Value>::BinarySearchTree(const BinarySearchTree &other) {
+BinarySearchTree<Key, Value>::BinarySearchTree(const BinarySearchTree& other) {
     if (other._root != nullptr) {
-        std::queue<Node*> children;
-        children.push(other._root);
-        while (!children.empty()) {
-            Node* curNode = children.front();
-            insert(curNode->keyValuePair);
-            _size++;
-            if (curNode->left != nullptr) {
-                children.push(curNode->left);
-            }
-            if (curNode->right != nullptr) {
-                children.push(curNode->right);
-            }
-            children.pop();
+        for (Iterator iter = other.begin(); iter != other.end(); ++iter) {
+            insert(iter->first, iter->second);
         }
     }
 }
 
 template<typename Key, typename Value>
-BinarySearchTree<Key, Value> &BinarySearchTree<Key, Value>::operator=(const BinarySearchTree &other) {
+BinarySearchTree<Key, Value>& BinarySearchTree<Key, Value>::operator=(const BinarySearchTree& other) {
     if (this != other) {
         BinarySearchTree newBST(other);
         *this = std::move(newBST);
@@ -347,45 +337,27 @@ BinarySearchTree<Key, Value> &BinarySearchTree<Key, Value>::operator=(const Bina
 }
 
 template<typename Key, typename Value>
-BinarySearchTree<Key, Value>::BinarySearchTree(BinarySearchTree &&other) noexcept {
-    std::swap(_root, other._root);
-    std::swap(_size, other._size);
+BinarySearchTree<Key, Value>::BinarySearchTree(BinarySearchTree&& other) noexcept {
+    *this = std::move(other);
 }
 
 template<typename Key, typename Value>
-BinarySearchTree<Key, Value> &BinarySearchTree<Key, Value>::operator=(BinarySearchTree &&other) noexcept {
-    if (this != other) {
-        delete _root;
-        _root = nullptr;
-        _size = 0;
-        std::swap(_root, other._root);
-        std::swap(_size, other._size);
+BinarySearchTree<Key, Value>& BinarySearchTree<Key, Value>::operator=(BinarySearchTree&& other) noexcept {
+    if (this != &other) {
+        clear();
+        std::swap(this->_root, other._root);
+        std::swap(this->_size, other._size);
     }
     return *this;
 }
 
 template<typename Key, typename Value>
 BinarySearchTree<Key, Value>::~BinarySearchTree() {
-    if (_root != nullptr) {
-        std::queue<Node*> children;
-        children.push(_root);
-        while (!children.empty()) {
-            Node* curNode = children.front();
-            if (curNode->left != nullptr) {
-                children.push(curNode->left);
-            }
-            if (curNode->right != nullptr) {
-                children.push(curNode->right);
-            }
-            delete curNode;
-            children.pop();
-        }
-    }
-    _size = 0;
+    clear();
 }
 
 template<typename Key, typename Value>
-void BinarySearchTree<Key, Value>::insert(const Key &key, const Value &value) {
+void BinarySearchTree<Key, Value>::insert(const Key& key, const Value& value) {
     if (_root != nullptr) {
         Node* curNode = _root;
         Key curKey = curNode->keyValuePair.first;
@@ -403,14 +375,14 @@ void BinarySearchTree<Key, Value>::insert(const Key &key, const Value &value) {
 }
 
 template<typename Key, typename Value>
-void BinarySearchTree<Key, Value>::erase(const Key &key) {
+void BinarySearchTree<Key, Value>::erase(const Key& key) {
     while (find(key) != end()) {
         remove(key, _root);
     }
 }
 
 template<typename Key, typename Value>
-typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value>::find(const Key &key) const {
+typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value>::find(const Key& key) const {
     Node* curNode = _root;
     while(curNode != nullptr) {
         if (curNode->keyValuePair.first == key) {
@@ -422,7 +394,7 @@ typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value
 }
 
 template<typename Key, typename Value>
-typename BinarySearchTree<Key, Value>::Iterator BinarySearchTree<Key, Value>::find(const Key &key) {
+typename BinarySearchTree<Key, Value>::Iterator BinarySearchTree<Key, Value>::find(const Key& key) {
     Node* curNode = _root;
     while (curNode != nullptr) {
         if (curNode->keyValuePair.first > key) {
@@ -446,7 +418,7 @@ typename BinarySearchTree<Key, Value>::Iterator BinarySearchTree<Key, Value>::fi
 
 template<typename Key, typename Value>
 std::pair<typename BinarySearchTree<Key, Value>::Iterator, typename BinarySearchTree<Key, Value>::Iterator>
-        BinarySearchTree<Key, Value>::equalRange(const Key &key) {
+        BinarySearchTree<Key, Value>::equalRange(const Key& key) {
     Iterator start = find(key);
     Iterator stop(start);
     if (start == end()) {
@@ -463,7 +435,7 @@ std::pair<typename BinarySearchTree<Key, Value>::Iterator, typename BinarySearch
 
 template<typename Key, typename Value>
 std::pair<typename BinarySearchTree<Key, Value>::ConstIterator, typename BinarySearchTree<Key, Value>::ConstIterator>
-        BinarySearchTree<Key, Value>::equalRange(const Key &key) const {
+        BinarySearchTree<Key, Value>::equalRange(const Key& key) const {
     ConstIterator start = find(key);
     ConstIterator stop(start);
     if (start == cend()) {
@@ -479,7 +451,7 @@ std::pair<typename BinarySearchTree<Key, Value>::ConstIterator, typename BinaryS
 }
 
 template<typename Key, typename Value>
-typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value>::min(const Key &key) const {
+typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value>::min(const Key& key) const {
     std::pair<ConstIterator, ConstIterator> keyValues = equalRange(key);
     ConstIterator minPairIterator = ConstIterator(keyValues.first);
     for (ConstIterator iterator = keyValues.first; iterator != keyValues.second; ++iterator) {
@@ -491,7 +463,7 @@ typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value
 }
 
 template<typename Key, typename Value>
-typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value>::max(const Key &key) const {
+typename BinarySearchTree<Key, Value>::ConstIterator BinarySearchTree<Key, Value>::max(const Key& key) const {
     std::pair<ConstIterator, ConstIterator> keyValues = equalRange(key);
     ConstIterator maxPairIterator = ConstIterator(keyValues.first);
     for (ConstIterator iterator = keyValues.first; iterator != keyValues.second; ++iterator) {
@@ -528,27 +500,46 @@ std::size_t BinarySearchTree<Key, Value>::size() const {
 }
 
 template<typename Key, typename Value>
-typename BinarySearchTree<Key, Value>::Node *BinarySearchTree<Key, Value>::minNode(BinarySearchTree::Node *node) {
-    auto CurNode = node;
-    while (CurNode->left != nullptr) {
-        CurNode = CurNode->left;
+typename BinarySearchTree<Key, Value>::Node* BinarySearchTree<Key, Value>::minNode(BinarySearchTree::Node* node) {
+    auto сurNode = node;
+    while (сurNode->left != nullptr) {
+        сurNode = сurNode->left;
     }
-    return CurNode;
+    return сurNode;
 }
 
 template<typename Key, typename Value>
-typename BinarySearchTree<Key, Value>::Node *BinarySearchTree<Key, Value>::maxNode(BinarySearchTree::Node *node) {
-    auto CurNode = node;
-    while (CurNode->right != nullptr) {
-        CurNode = CurNode->right;
+typename BinarySearchTree<Key, Value>::Node* BinarySearchTree<Key, Value>::maxNode(BinarySearchTree::Node* node) {
+    auto сurNode = node;
+    while (сurNode->right != nullptr) {
+        сurNode = сurNode->right;
     }
-    return CurNode;
+    return сurNode;
 }
 
 template<typename Key, typename Value>
-BinarySearchTree<Key, Value>::Node::Node(Key key, Value value, BinarySearchTree::Node *parent,
-                                         BinarySearchTree::Node *left, BinarySearchTree::Node *right):
+void BinarySearchTree<Key, Value>::clear() {
+    if (_root != nullptr) {
+        std::queue<Node*> children;
+        children.push(_root);
+        while (!children.empty()) {
+            Node* curNode = children.front();
+            if (curNode->left != nullptr) {
+                children.push(curNode->left);
+            }
+            if (curNode->right != nullptr) {
+                children.push(curNode->right);
+            }
+            delete curNode;
+            children.pop();
+        }
+    }
+    _size = 0;
+}
+
+template<typename Key, typename Value>
+BinarySearchTree<Key, Value>::Node::Node(Key key, Value value, BinarySearchTree::Node* parent,
+                                         BinarySearchTree::Node* left, BinarySearchTree::Node* right):
                                          keyValuePair(std::make_pair(key, value)),
                                          parent(parent), left(left), right(right) {
-
                                          }
